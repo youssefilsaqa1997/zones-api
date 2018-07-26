@@ -4,6 +4,7 @@ var bodyParser = require('body-parser')
 var { mongoose } = require('./DB/mongoose');
 var { creation } = require('./models/zone');
 
+const port =process.env.PORT || 3000;
 var app = express();
 
 app.use(bodyParser.json());
@@ -61,6 +62,6 @@ creation.findOneAndUpdate({_id:req.body._id},{ $set: {
     })
 });
 
-app.listen(3000, () => {
-    console.log("startes on port 3000")
+app.listen(port, () => {
+    console.log(`startes on port ${port}`)
 });
