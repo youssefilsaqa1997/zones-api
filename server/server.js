@@ -1,14 +1,20 @@
 var express = require('express')
 var bodyParser = require('body-parser')
+const hbs = require('hbs');
 
 var { mongoose } = require('./DB/mongoose');
 var { creation } = require('./models/zone');
 
 const port =process.env.PORT || 3000;
 var app = express();
+hbs.registerPartials(__dirname + '/server/views');
+app.set('view engine', 'hbs');
 
 app.use(bodyParser.json());
 
+app.get('/',(req, res) => {
+    res.render('home.hbs');
+})
 app.post('/creation', (req, res) => {
     if(req.body.points.length>=3){
     var zoneCreation = new creation({
