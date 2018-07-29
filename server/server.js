@@ -2,6 +2,8 @@ var express = require('express')
 var bodyParser = require('body-parser')
 const hbs = require('hbs');
 const cors = require('cors')
+var {User} = require('./models/users');
+const jwt = require('jsonwebtoken');
 
 var { mongoose } = require('./DB/mongoose');
 var { creation } = require('./models/zone');
@@ -37,8 +39,41 @@ zoneCreation.save().then((doc) => {
 })
 });
 
+function checkValid(req, res, next){
+   const _token = req.body['token'];
+   console.log(_token);
+   jwt.verify(_token, "ilsaqa", (err, verified)=>{
+       console.log(err, verified);
+       next();
+   })
+}
+
+
+app.post('/check', checkValid, (req, res)=>{
+    res.send({message: "still working"})
+})
+
+app.post('/loginToken',(req, res) => {
+    if(req.body.mobile.length==11){
+        User.findOne({mobile:req.body.mobile}).then((doc) => {
+         if(doc.password==req.body.password){
+            const token = doc.generateAuthToken();
+            res.send(token);
+                
+         }else{
+             res.status(400).send({message: "password doesn't match"});
+         }
+        },(e)=>{
+            res.status(400).send({message:"mobile number not found"});
+        })
+}else {
+    res.status(400).send({message:"The number less than 10"})
+}
+})
+
 app.get('/fetch',(req,res)=>{
 creation.find().then((zones)=>{
+    console.log(zones); 
     res.send({zones});
 },(e)=>{
     res.status(400).send(e);
