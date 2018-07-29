@@ -1,6 +1,7 @@
 var express = require('express')
 var bodyParser = require('body-parser')
 const hbs = require('hbs');
+const cors = require('cors')
 
 var { mongoose } = require('./DB/mongoose');
 var { creation } = require('./models/zone');
@@ -10,6 +11,7 @@ var app = express();
 hbs.registerPartials(__dirname + '/server/views');
 app.set('view engine', 'hbs');
 
+app.use(cors())
 app.use(bodyParser.json());
 
 app.get('/',(req, res) => {
