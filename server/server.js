@@ -16,6 +16,15 @@ app.set('view engine', 'hbs');
 app.use(cors())
 app.use(bodyParser.json());
 
+function checkValid(req, res, next){
+    const _token = req.body['token'];
+    console.log(_token);
+    jwt.verify(_token, "ilsaqa", (err, verified)=>{
+        console.log(err, verified);
+        next();
+    })
+ }
+
 app.get('/',(req, res) => {
     res.render('home.hbs');
 })
@@ -39,16 +48,6 @@ zoneCreation.save().then((doc) => {
 })
 });
 
-function checkValid(req, res, next){
-   const _token = req.body['token'];
-   console.log(_token);
-   jwt.verify(_token, "ilsaqa", (err, verified)=>{
-       console.log(err, verified);
-       next();
-   })
-}
-
-
 app.post('/check', checkValid, (req, res)=>{
     res.send({message: "still working"})
 })
@@ -58,7 +57,7 @@ app.post('/loginToken',(req, res) => {
         User.findOne({mobile:req.body.mobile}).then((doc) => {
          if(doc.password==req.body.password){
             const token = doc.generateAuthToken();
-            res.send(token);
+            res.send({token});
                 
          }else{
              res.status(400).send({message: "password doesn't match"});
