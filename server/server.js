@@ -52,6 +52,25 @@ app.post('/check', checkValid, (req, res) => {
     res.send({ message: "still working" })
 })
 
+app.post('/signUp', (req, res) => {
+    if (req.body.mobile.length == 11) {
+        var user = new User({
+            mobile: req.body.mobile,
+            password: req.body.password,
+            name: req.body.name
+        });
+        
+        user.save().then((doc) => {
+            res.send(doc);
+        }, (e) => {
+            res.status(400).send(e);
+        })
+    } else {
+        res.status(400).send({massege:"mobile number less or more than 11 number"});
+    }
+    
+});
+
 app.post('/loginToken', (req, res) => {
     if (req.body.mobile.length == 11) {
         User.findOne({ mobile: req.body.mobile }).then((doc) => {
@@ -108,6 +127,13 @@ app.post('/update', (req, res) => {
     })
 });
 
+app.post('/delete', (req, res) => {
+creation.findOneAndRemove({ _id: req.body._id }).then(()=>{
+    res.send({message:"Deleted"})
+}).catch((e) => {
+    res.status(400).send({ message: "ID not found" });
+})
+});
 app.listen(port, () => {
     console.log(`startes on port ${port}`)
 });
