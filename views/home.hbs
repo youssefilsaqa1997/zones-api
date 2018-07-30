@@ -19,7 +19,7 @@
 	"points":[{"lat":23323,"lng":23232},{"lat":8554,"lng":788},{"lat":55,"lng":755588}]
     } </p>
     <h4>update api: "https://rocky-cliffs-50279.herokuapp.com/update"</h4>
-    <p>This update api should have Object that contain ID , string label , string color and Array of points ,the array contain Object must have 3 points at min</p>
+    <p>This post api should have Object that contain ID , string label , string color and Array of points ,the array contain Object must have 3 points at min</p>
     <p>Example: 
     {   
 	"_id" : "5b58cfc3d0775d6014d55395",
@@ -27,8 +27,27 @@
 	"color":"5fffff",
 	"points":[{"lat":23323,"lng":23232},{"lat":8554,"lng":788},{"lat":55,"lng":755588}]
     } </p>
+    <h4>delete api: "https://rocky-cliffs-50279.herokuapp.com/delete"</h4>
+    <p>This post api should have Object that contain ID </p>
+    <p>Example: 
+    {   
+	"_id" : "5b58cfc3d0775d6014d55395"
+    } </p>
     <h4>fetch api: "https://rocky-cliffs-50279.herokuapp.com/fetch"</h4>
-    <p>This fetch api and it will give you all data that you stored</p>
+    <p>This get api call it and then will give you all data that you stored</p>
+    <h4>signUp api: "https://rocky-cliffs-50279.herokuapp.com/signUp"</h4>
+    <p>This post api should have Object that contain string mobile no. and must be 11 digit , string password and must be more 3 digits and string name.</p>
+    <p>Example: 
+    {"mobile":"01111111111",
+     "password":"more 3",
+     "name":"bob"
+    } </p>
+    <h4>login api: "https://rocky-cliffs-50279.herokuapp.com/loginToken"</h4>
+    <p>This post api should have Object that contain string mobile no. and must be 11 digit , string password and must be more 3 digits,and it will give you token</p>
+    <p>Example: 
+    {"mobile":"01111111111",
+     "password":"more 3"
+    } </p>
 
 </body>
 
