@@ -67,7 +67,7 @@ app.post('/loginToken', (req, res) => {
         })
     }
     else {
-        res.status(400).send({ message: "The number less than 10" })
+        res.status(400).send({ message: "The number less than or more 11" })
     }
 })
 
