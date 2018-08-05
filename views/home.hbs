@@ -7,18 +7,29 @@
 </head>
 
 <body>
-    <h1>welcome to ilsaqa's apis</h1>
-
-    <h3>api description</h3>
-    <h4>creation api: "https://rocky-cliffs-50279.herokuapp.com/creation"</h4>
-    <p>this post api should have Object that contain  string label , string color and Array of points ,the array contain Object must have 3 points at min</p>
+    <h1>api description</h1>
+    <h3>creation api: "https://rocky-cliffs-50279.herokuapp.com/creation"</h3>
+    <p>this post api should have Object that contain  string label , string color and Array of points ,the array contain Object must have 3 points at min and ID of how created by</p>
     <p>Example: 
-    {   
-	"label":"name of zone",
-	"color":"5fffff",
-	"points":[{"lat":23323,"lng":23232},{"lat":8554,"lng":788},{"lat":55,"lng":755588}]
-    } </p>
-    <h4>update api: "https://rocky-cliffs-50279.herokuapp.com/update"</h4>
+    {   "label": "mmm",
+    "color": "#00ffff",
+    "points": [
+        {
+            "lng": 31.22787466610498,
+            "lat": 30.001233750605465
+        },
+        {
+            "lng": 31.23522854587827,
+            "lat": 30.003432149188953
+        },
+        {
+            "lng": 31.242582425651563,
+            "lat": 30.003268091884255
+        }
+    ],
+	"userID":"5b5dfea4fb6fc072a40bab25"
+} </p>
+    <h3>update api: "https://rocky-cliffs-50279.herokuapp.com/update"</h3>
     <p>This post api should have Object that contain ID , string label , string color and Array of points ,the array contain Object must have 3 points at min</p>
     <p>Example: 
     {   
@@ -27,23 +38,23 @@
 	"color":"5fffff",
 	"points":[{"lat":23323,"lng":23232},{"lat":8554,"lng":788},{"lat":55,"lng":755588}]
     } </p>
-    <h4>delete api: "https://rocky-cliffs-50279.herokuapp.com/delete"</h4>
+    <h3>delete api: "https://rocky-cliffs-50279.herokuapp.com/delete"</h3>
     <p>This post api should have Object that contain ID </p>
     <p>Example: 
     {   
 	"_id" : "5b58cfc3d0775d6014d55395"
     } </p>
-    <h4>fetch api: "https://rocky-cliffs-50279.herokuapp.com/fetch"</h4>
+    <h3>fetch api: "https://rocky-cliffs-50279.herokuapp.com/fetch"</h3>
     <p>This get api call it and then will give you all data that you stored</p>
-    <h4>signUp api: "https://rocky-cliffs-50279.herokuapp.com/signUp"</h4>
+    <h3>signUp api: "https://rocky-cliffs-50279.herokuapp.com/signUp"</h3>
     <p>This post api should have Object that contain string mobile no. and must be 11 digit , string password and must be more 3 digits and string name.</p>
     <p>Example: 
     {"mobile":"01111111111",
      "password":"more 3",
      "name":"bob"
     } </p>
-    <h4>login api: "https://rocky-cliffs-50279.herokuapp.com/loginToken"</h4>
-    <p>This post api should have Object that contain string mobile no. and must be 11 digit , string password and must be more 3 digits,and it will give you token</p>
+    <h3>login api: "https://rocky-cliffs-50279.herokuapp.com/loginToken"</h3>
+    <p>This post api should have Object that contain string mobile no. and must be 11 digit , string password and must be more 3 digits,it will give you token and user Object </p>
     <p>Example: 
     {"mobile":"01111111111",
      "password":"more 3"

@@ -4,6 +4,7 @@ const hbs = require('hbs');
 const cors = require('cors')
 var { User } = require('./models/users');
 const jwt = require('jsonwebtoken');
+const bcrypt = require('bcryptjs')
 
 var { mongoose } = require('./DB/mongoose');
 var { creation } = require('./models/zone');
@@ -34,9 +35,9 @@ app.post('/creation', (req, res) => {
             label: req.body.label,
             color: req.body.color,
             points: req.body.points,
-            createdBy:req.body.userID,
-                creationDate:new Date()
-            }
+            createdBy: req.body.userID,
+            creationDate: new Date()
+        }
 
         );
 
@@ -46,9 +47,9 @@ app.post('/creation', (req, res) => {
             res.status(400).send(e);
         })
     } else {
-            res.status(400).send({ message: "you need more 2 points" })
+        res.status(400).send({ message: "you need more 2 points" })
     }
-   
+
 });
 
 app.post('/check', checkValid, (req, res) => {
@@ -57,33 +58,51 @@ app.post('/check', checkValid, (req, res) => {
 
 app.post('/signUp', (req, res) => {
     if (req.body.mobile.length == 11) {
-        var user = new User({
-            mobile: req.body.mobile,
-            password: req.body.password,
-            name: req.body.name
-        });
-        
-        user.save().then((doc) => {
-            res.send(doc);
-        }, (e) => {
-            res.status(400).send(e);
+
+        bcrypt.genSalt(10, (err, salt) => {
+            bcrypt.hash(req.body.password, salt, (err, hash) => {
+                var user = new User({
+                    mobile: req.body.mobile,
+                    password: hash,
+                    name: req.body.name
+                });
+
+                user.save().then((doc) => {
+                    res.send(doc);
+                }, (e) => {
+                    res.status(400).send(e);
+                })
+            })
         })
+
+
     } else {
-        res.status(400).send({massege:"mobile number less or more than 11 number"});
+        res.status(400).send({ massege: "mobile number less or more than 11 number" });
     }
-    
+
 });
 
 app.post('/loginToken', (req, res) => {
     if (req.body.mobile.length == 11) {
         User.findOne({ mobile: req.body.mobile }).then((doc) => {
-            if (doc.password == req.body.password) {
-                const token = doc.generateAuthToken();
-                res.send({ token , user:doc });
+            bcrypt.compare(req.body.password, doc.password, (err, Res) => {
+                if (Res == true) {
+                    const token = doc.generateAuthToken();
+                    res.send({
+                        token,
+                        user: {
+                            mobile: doc.mobile,
+                            name: doc.name,
+                            id: doc._id
+                        }
+                    });
 
-            } else {
-                res.status(400).send({ message: "password doesn't match" });
-            }
+                } else {
+                    res.status(400).send({ message: "password doesn't match" });
+                }
+
+            })
+
         }).catch((e) => {
             res.status(400).send({ message: "mobile number not found" });
         })
@@ -122,15 +141,15 @@ app.post('/update', (req, res) => {
         res.status(400).send({ message: "you need more 2 points" })
     }
 
-    
+
 });
 
 app.post('/delete', (req, res) => {
-creation.findOneAndRemove({ _id: req.body._id }).then(()=>{
-    res.send({message:"Deleted"})
-}).catch((e) => {
-    res.status(400).send({ message: "ID not found" });
-})
+    creation.findOneAndRemove({ _id: req.body._id }).then(() => {
+        res.send({ message: "Deleted" })
+    }).catch((e) => {
+        res.status(400).send({ message: "ID not found" });
+    })
 });
 app.listen(port, () => {
     console.log(`startes on port ${port}`)
