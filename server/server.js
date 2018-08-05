@@ -33,19 +33,22 @@ app.post('/creation', (req, res) => {
         var zoneCreation = new creation({
             label: req.body.label,
             color: req.body.color,
-            points: req.body.points
-        });
+            points: req.body.points,
+            createdBy:req.body.userID,
+                creationDate:new Date()
+            }
+
+        );
+
+        zoneCreation.save().then((doc) => {
+            res.send(doc);
+        }, (e) => {
+            res.status(400).send(e);
+        })
     } else {
-        var zoneCreation = new creation({
-            label: req.body.label,
-            color: req.body.color
-        });
+            res.status(400).send({ message: "you need more 2 points" })
     }
-    zoneCreation.save().then((doc) => {
-        res.send(doc);
-    }, (e) => {
-        res.status(400).send(e);
-    })
+   
 });
 
 app.post('/check', checkValid, (req, res) => {
@@ -76,7 +79,7 @@ app.post('/loginToken', (req, res) => {
         User.findOne({ mobile: req.body.mobile }).then((doc) => {
             if (doc.password == req.body.password) {
                 const token = doc.generateAuthToken();
-                res.send({ token });
+                res.send({ token , user:doc });
 
             } else {
                 res.status(400).send({ message: "password doesn't match" });
@@ -102,29 +105,24 @@ app.get('/fetch', (req, res) => {
 
 app.post('/update', (req, res) => {
     if (req.body.points.length >= 3) {
-        var zoneCreation = new creation({
-            label: req.body.label,
-            color: req.body.color,
-            points: req.body.points
-        });
+
+        creation.findOneAndUpdate({ _id: req.body._id }, {
+            $set: {
+                label: req.body.label,
+                color: req.body.color,
+                points: req.body.points
+            }
+        }).then((doc) => {
+            res.send(doc);
+        }, (e) => {
+            res.status(400).send(e);
+        })
+
     } else {
-        var zoneCreation = new creation({
-            label: req.body.label,
-            color: req.body.color
-        });
+        res.status(400).send({ message: "you need more 2 points" })
     }
 
-    creation.findOneAndUpdate({ _id: req.body._id }, {
-        $set: {
-            label: req.body.label,
-            color: req.body.color,
-            points: req.body.points
-        }
-    }).then((doc) => {
-        res.send(doc);
-    }, (e) => {
-        res.status(400).send(e);
-    })
+    
 });
 
 app.post('/delete', (req, res) => {

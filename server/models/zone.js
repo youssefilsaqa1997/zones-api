@@ -15,6 +15,14 @@ var creation =mongoose.model('zone',{
         type:Array,
         required:true
         
+    },
+    createdBy:{
+        type:String,
+        required:true
+    } ,
+    creationDate:{
+        type:String,
+        required:true
     }
 });
 
