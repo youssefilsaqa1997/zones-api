@@ -26,6 +26,25 @@ function checkValid(req, res, next) {
     })
 }
 
+async function findingUser(createdBy, zoneObject) {
+    var data = {}
+    await User.findById(createdBy, (err, user) => {
+        data = {
+            label: zoneObject.label,
+            color: zoneObject.color,
+            points: zoneObject.points,
+            creationDate: zoneObject.creationDate,
+            createdBy: {
+                name: user.name,
+                mobile: user.mobile,
+                _id: user._id
+            }
+        }
+
+    });
+    return data;
+}
+
 app.get('/', (req, res) => {
     res.render('home.hbs');
 })
@@ -113,9 +132,13 @@ app.post('/loginToken', (req, res) => {
 })
 
 app.get('/fetch', (req, res) => {
-    creation.find().then((zones) => {
-        console.log(zones);
-        res.send({ zones });
+    creation.find().then(async (zones) => {
+        var fetchedData = [];
+        for (i = 0; i < zones.length; i++) {                
+            fetchedData.push(await findingUser(zones[i].createdBy, zones[i]));             
+        };
+        res.send({ fetchedData });
+
     }, (e) => {
         res.status(400).send(e);
     })
