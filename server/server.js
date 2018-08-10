@@ -2,12 +2,13 @@ var express = require('express')
 var bodyParser = require('body-parser')
 const hbs = require('hbs');
 const cors = require('cors')
-var { User } = require('./models/users');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs')
 
 var { mongoose } = require('./DB/mongoose');
 var { creation } = require('./models/zone');
+var { User } = require('./models/users');
+var {LogHistory} = require('./models/serverLog')
 
 const port = process.env.PORT || 3000;
 var app = express();
@@ -16,6 +17,18 @@ app.set('view engine', 'hbs');
 
 app.use(cors())
 app.use(bodyParser.json());
+
+app.use((req, res, next) => {
+    var log = `${ new Date().toString()}: ${req.method} ${req.url} `;
+    var requestBody=req.body;
+    var newLog = new LogHistory({
+        log,
+        requestBody
+    })
+
+    newLog.save();
+    next();
+  })
 
 function checkValid(req, res, next) {
     const _token = req.body['token'];
@@ -49,7 +62,9 @@ app.get('/', (req, res) => {
     res.render('home.hbs');
 })
 app.post('/creation', (req, res) => {
+   
     if (req.body.points.length >= 3) {
+        
         var zoneCreation = new creation({
             label: req.body.label,
             color: req.body.color,
@@ -57,7 +72,6 @@ app.post('/creation', (req, res) => {
             createdBy: req.body.userID,
             creationDate: new Date()
         }
-
         );
 
         zoneCreation.save().then((doc) => {
